@@ -1,0 +1,309 @@
+/******************************************************************************
+ * AUTHOR     : Chris Burrell, Mark Saleh
+ * STUDENT ID : 1009369 & 1060488
+ * Lab #23	  : Functions - Rock Paper Scissors
+ * CLASS      : CS1A
+ * SECTION    : MW: 8am
+ * DUE DATE   : 4/16/18
+ *****************************************************************************/
+
+#include "Lab23.h"
+
+/******************************************************************************
+ * Lab #23: Functions - Rock Paper Scissors
+ * ----------------------------------------------------------------------------9
+ * This program will allow the user to play Rock, Paper, Scissors with the
+ * 		computer. In this version, if there is a tie, the computer wins.
+ * ----------------------------------------------------------------------------
+ * INPUT:
+ * 		name          : the user's name.
+ * 		roundNum      : the number of rounds the user wishes to play.
+ * 		userTurn      : the choice between R, P, or S by the user.
+ *
+ * OUTPUT:
+ * 		 compTurn     : the randomized choice by the computer.
+ * 		 percentWin	  : the winning percentage for the user.
+ * 		 percentLose  : the losing percentage for the user.
+ *****************************************************************************/
+void GetInput(string &name, int &round);
+char GetAndCheckPlay ();
+char GetComputerPlay ();
+bool CheckWin (char userInput, char compInput);
+void OutputWin (string name, char userInput, char compInput,
+				bool winner);
+void OutputMatchWinner(string name, int prcntWin, int prcntLose, int winCount,
+						int lossCount);
+
+int main()
+{
+	/**************************************************************************
+	 * CONSTANTS
+	 * ------------------------------------------------------------------------
+	 * OUTPUT - USED FOR CLASS HEADING
+	 *-------------------------------------------------------------------------
+	 *PROGRAMMER[] : Programmer's Name
+	 *CLASS[]      : Student's Course
+	 *SECTION[]    : Class Days and Times
+	 *LAB_NUM      : Lab Number (specific to this Lab / Assignment)
+	 *LAB_NAME[]   : Title of the Lab / Assignment
+	 *************************************************************************/
+
+
+	const char PROGRAMMER[] = "Chris Burrell & Mark Saleh";
+	const char CLASS[]      = "CS1A";
+	const char 	SECTION[]   = "MW: 8:00 am";
+	const int LAB_NUM       = 23;
+	const char LAB_NAME[]   = "Functions - Rock Paper Scissors";
+
+	// variables
+	string name;     // IN & OUT   - the user's name
+	int roundNum;    // IN 		   - the number of rounds user wishes to play
+	char userTurn;   // IN & OUT   - the choice between R, P, or S by the user
+	char compTurn;   // CALC & OUT - the randomized choice by the computer
+	int gameCount;   // CALC       - the for loop accumulator
+	bool winner;     // CALC	   - if the user won or lost one single round
+	float winCount;  // CALC	   - the counter for the number of wins
+	float loseCount; // CALC       - the counter for the number of loses
+	int percentWin;  // CALC & OUT - the winning percentage for the user
+	int percentLose; // CALC & OUT - the losing percentage for the user
+
+	//initialization
+	winCount = 0;
+	loseCount = 0;
+
+	//OUTPUT the class heading
+	cout << left;
+	cout << "***********************************************************\n";
+	cout << "*  PROGRAMMED BY : " << PROGRAMMER << endl;
+	cout << "*  "     << setw(14) << "CLASS"    << ": " << CLASS    << endl;
+	cout << "*  "     << setw(14) << "SECTION"  << ": " << SECTION  << endl;
+	cout << "*  LAB #"<< setw(9) << LAB_NUM    << ": "<< LAB_NAME << endl;
+	cout << "************************************************************\n\n";
+	cout << right;
+
+
+	/**************************************************************************
+	 	 * INPUT -
+	 *************************************************************************/
+
+	GetInput (name, roundNum);
+
+	/**************************************************************************
+	 * for loop - will increment the game count
+	 */
+	for (gameCount = 1; gameCount <= roundNum; gameCount++)
+	{
+		userTurn = GetAndCheckPlay ();
+		compTurn = GetComputerPlay ();
+
+		winner = CheckWin(userTurn, compTurn);
+		OutputWin (name, userTurn, compTurn, winner);
+
+
+		if(winner == true)
+		{
+			winCount = winCount + 1;
+		}
+		else
+		{
+			loseCount = loseCount + 1;
+		}
+
+	}
+
+	percentWin = round((winCount / (gameCount - 1)) * 100);
+	percentLose = round((loseCount / (gameCount - 1)) * 100);
+
+	OutputMatchWinner(name, percentWin, percentLose, winCount, loseCount);
+
+
+	return 0;
+}
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+functions
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+#1
+
+#include "Lab23.h"
+
+
+void GetInput(string &name, int &round)
+{
+	cout << "Enter Player's Name: ";
+	getline(cin,name);
+	cout << "Enter Number of Rounds in Match: ";
+	cin >> round;
+	cin.ignore(10000,'\n');
+}
+
+
+
+#2
+
+#include "Lab23.h"
+
+char GetAndCheckPlay ()
+{
+	char play;
+
+	cout << endl;
+	cout << "**********************" << endl;
+	cout << "** CHOOSE YOUR PLAY **" << endl;
+	cout << "**********************" << endl;
+	do
+	{
+		cout << "R - Rock" << endl;
+		cout << "P - Paper" << endl;
+		cout << "S - Scissors" << endl;
+		cout << "Enter your play: ";
+		cin.get(play);
+		cin.ignore(10000, '\n');
+
+		play = toupper(play);
+		if (play != 'R' && play != 'P' && play != 'S')
+		{
+			cout << endl;
+			cout << "** INVALID INPUT - Please Enter (R, P, or S) **";
+			cout << endl << endl;
+		}
+
+	} while (play != 'R' && play != 'P' && play != 'S');
+
+	cout << endl;
+	return play;
+}
+
+
+
+#3
+
+#include "Lab23.h"
+
+char GetComputerPlay ()
+{
+	int computerRand;
+	char computerPlay;
+
+	srand(time(NULL));
+	computerRand = rand() % 3 + 1;
+	switch (computerRand)
+	{
+		case 1 : computerPlay = 'R';
+				 break;
+		case 2 : computerPlay = 'P';
+				 break;
+		case 3 : computerPlay = 'S';
+				 break;
+	}
+	return computerPlay;
+}
+
+
+
+#4
+
+#include "Lab23.h"
+
+bool CheckWin (char userInput, char compInput)
+{
+	bool userWin;
+	bool checkWin;
+
+	userWin = (userInput == 'R' && compInput == 'S') || (userInput == 'P' &&
+			  compInput == 'R') || (userInput == 'S' && compInput == 'P');
+
+	if (userWin)
+	{
+		checkWin = true;
+	}
+	else
+	{
+		checkWin = false;
+	}
+
+	return checkWin;
+
+}
+
+
+
+
+#5
+
+#include "Lab23.h"
+
+void OutputWin (string name, char userInput, char compInput,
+				bool winner)
+{
+	cout << name << " chooses";
+	switch(userInput)
+	{
+		case 'R':  cout << " ROCK!";
+					break;
+		case 'P': cout << " PAPER!";
+					break;
+		case 'S': cout << " SCISSORS!";
+					break;
+	}
+
+	cout << endl;
+
+
+	cout << "Computer chooses ";
+	switch(compInput)
+	{
+		case 'R': cout << " ROCK!";
+					break;
+		case 'P': cout << " PAPER!";
+					break;
+		case 'S': cout << " SCISSORS;";
+					break;
+	}
+
+	cout << endl << endl;
+
+	if (winner == true)
+	{
+		cout << name << " WINS!!";
+	}
+	else
+	{
+		cout << "Computer wins, better luck next time, " << name << '!';
+	}
+	cout << endl << endl << endl;
+}
+
+
+
+
+
+#6
+
+#include "Lab23.h"
+
+void OutputMatchWinner(string name, int prcntWin, int prcntLose, int winCount,
+						int lossCount)
+{
+	cout << "***********************************" << endl;
+	cout << "*********  FINAL RESULTS  *********" << endl;
+	cout << "***********************************" << endl << endl;
+
+	if(winCount > lossCount)
+	{
+		cout << name << " is the WINNER, WINNER, CHICKEN DINNER!!";
+		cout << endl;
+		cout << name << " won " << prcntWin << "% of the time!";
+	}
+	else
+	{
+		cout << "computer is the WINNER, WINNER, CHICKEN DINNER!!";
+		cout << endl;
+		cout << name << " lost " << prcntLose << "% of the time!";
+	}
+}
