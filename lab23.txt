@@ -307,3 +307,33 @@ void OutputMatchWinner(string name, int prcntWin, int prcntLose, int winCount,
 		cout << name << " lost " << prcntLose << "% of the time!";
 	}
 }
+
+
+
+
+
+
+-----header!!!!!!!!!!---------- put it in a header file!
+
+
+#ifndef LAB23_H_
+#define LAB23_H_
+
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+using namespace std;
+
+void GetInput(string &name, int &roundNum);
+char GetAndCheckPlay();
+char GetComputerPlay();
+bool CheckWin(char userInput, char compInput);
+void OutputWin (string name, char userInput, char compInput,
+				bool winner);
+
+
+
+#endif /* LAB23_H_ */
